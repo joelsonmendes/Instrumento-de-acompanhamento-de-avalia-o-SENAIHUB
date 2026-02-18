@@ -1,0 +1,1564 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Avaliação · Instalação Elétrica Predial</title>
+    <!-- Bibliotecas para geração de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            /* SENAI Hub Colors */
+            --senai-blue-dark: #0e58c7; /* Deep blue for primary elements, text */
+            --senai-blue-medium: #005090; /* Mid-range blue for secondary elements */
+            --senai-blue-light: #e0f2f7; /* Very light blue for subtle backgrounds */
+            --senai-orange: #ff6600;    /* Vibrant orange for accents, buttons */
+            --senai-orange-light: #fff2e0; /* Light orange for subtle accents */
+
+            /* General Colors */
+            --background-body: #f4f7f9; /* Off-white for body */
+            --background-container: #ffffff; /* Pure white for main content container */
+            --background-card: #f8faff; /* Light blue-gray for cards */
+            --text-color-dark: #2c3e50; /* Dark gray for main text */
+            --text-color-medium: #556b82; /* Medium gray for secondary text */
+            --border-color-light: #d8e2e9; /* Light gray for general borders */
+            --border-color-medium: #c0d0e0; /* Medium gray for table borders */
+            --shadow-color: rgba(0, 0, 0, 0.1);
+
+            /* Spacing and Sizing */
+            --base-font-size: 16px;
+            --main-padding-v: 1.5rem; /* 24px */
+            --main-padding-h: 1.25rem; /* 20px */
+            --gap-sm: 0.3125rem; /* 5px */
+            --gap-md: 0.75rem; /* 12px */
+            --gap-lg: 1rem; /* 16px */
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            color: var(--text-color-dark); /* Default text color */
+        }
+        html {
+            font-size: var(--base-font-size);
+        }
+        body {
+            background: var(--background-body);
+            margin: 0;
+            padding: clamp(1rem, 5vw, 2.5rem); /* Responsive padding */
+            display: flex;
+            flex-direction: column; /* Allow content to stack */
+            align-items: center; /* Center horizontally */
+        }
+
+        /* SENAI HUB Branding */
+        #senaiHubBranding {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(1.8rem, 5vw, 2.8rem); /* Responsive font size */
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: clamp(1rem, 2vw, 2rem); /* Space before the main container */
+            padding: clamp(0.5rem, 1vw, 1rem);
+            width: 100%;
+            max-width: 1400px; /* Align with container max-width */
+            line-height: 1; /* Tighter line height */
+        }
+        #senaiHubBranding .senai-text {
+            color: var(--senai-blue-dark);
+        }
+        #senaiHubBranding .hub-text {
+            color: var(--senai-orange);
+            margin-left: 0.2em; /* Small gap between SENAI and HUB */
+        }
+
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: var(--background-container);
+            border-radius: 20px;
+            box-shadow: 0 12px 30px var(--shadow-color);
+            padding: var(--main-padding-v) var(--main-padding-h);
+        }
+
+        /* cabeçalho */
+        .header {
+            border-bottom: 2px solid var(--senai-blue-dark);
+            margin-bottom: 1.25rem; /* 20px */
+            padding-bottom: 0.75rem; /* 12px */
+        }
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 1.9rem); /* Responsive font size */
+            color: var(--senai-blue-dark);
+            margin: 0 0 0.25rem; /* 4px */
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+        .header h2 {
+            font-size: clamp(1rem, 3vw, 1.2rem); /* Responsive font size */
+            color: var(--senai-blue-medium);
+            font-weight: 400;
+            margin: 0 0 0.5rem; /* 8px */
+            display: flex; /* For inline editing in h2 */
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--gap-sm) var(--gap-md);
+        }
+        .header .desafio {
+            background: var(--senai-blue-light);
+            padding: 0.5rem 1rem; /* 8px 16px */
+            border-radius: 30px;
+            display: inline-block;
+            font-weight: 500;
+            color: var(--senai-blue-dark);
+            margin: 0.5rem 0 0.25rem; /* 8px 0 4px */
+            border-left: 5px solid var(--senai-orange); /* Orange accent */
+        }
+
+        /* legenda conceitos */
+        .legend-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--gap-md); /* 12px */
+            background: var(--background-card);
+            padding: 1.125rem 1rem; /* 18px 16px */
+            border-radius: 28px;
+            margin: 1.25rem 0 1.5625rem; /* 20px 0 25px */
+            border: 1px solid var(--border-color-light);
+            justify-content: space-around;
+        }
+        .legend-item {
+            flex: 1 1 clamp(150px, 20vw, 200px); /* Responsive flex basis */
+            padding: 0.5rem 0.875rem; /* 8px 14px */
+            border-radius: 40px;
+            font-weight: 500;
+            background: var(--background-container);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            border-left: 6px solid;
+        }
+        .item-a { border-color: #1e7e34; background: #e6f3e6; } /* Green - keep for "A" */
+        .item-b { border-color: var(--senai-blue-medium); background: var(--senai-blue-light); } /* SENAI Blue for "B" */
+        .item-c { border-color: var(--senai-orange); background: var(--senai-orange-light); } /* SENAI Orange for "C" */
+        .item-d { border-color: #b13e3e; background: #ffe6e6; } /* Red - keep for "D" */
+        .item-desc {
+            font-size: 0.95rem;
+            color: var(--text-color-dark);
+        }
+        .item-desc strong { font-size: 1.2rem; margin-right: 0.375rem; /* 6px */ }
+
+        /* tabela */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid var(--border-color-medium);
+            background: var(--background-container);
+            margin: 1.125rem 0 1.5625rem; /* 18px 0 25px */
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px; /* Minimum width for table to ensure horizontal scroll */
+            font-size: 0.85rem;
+        }
+        th {
+            background: var(--senai-blue-dark);
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 0.375rem; /* 8px 6px */
+            text-align: center;
+            vertical-align: middle;
+            border-right: 1px solid var(--senai-blue-medium);
+            white-space: normal;
+            word-break: break-word;
+            line-height: 1.3;
+            display: table-cell;
+        }
+        th:last-child {
+            border-right: none;
+        }
+        td {
+            border: 1px solid var(--border-color-medium);
+            padding: 0.5rem 0.3125rem; /* 8px 5px */
+            vertical-align: middle;
+            background-color: var(--background-container);
+            color: var(--text-color-dark);
+        }
+        tr:nth-child(even) td {
+            background-color: var(--senai-blue-light); /* Lighter blue for even rows */
+        }
+        /* Styling for the student name cell */
+        .aluno-nome {
+            min-width: 200px; /* Ensure enough space for name and button */
+        }
+        .name-display-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-sm); /* 5px */
+            width: 100%;
+        }
+        .name-display-wrapper .edit-name-input {
+            width: 100%;
+            font-weight: 500;
+            background: var(--senai-blue-light);
+        }
+        .static-name-text {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+            color: var(--text-color-dark);
+            background: var(--senai-blue-light);
+            padding: 0.5rem; /* 8px */
+            border-radius: 10px;
+            height: 2.375rem; /* 38px */
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color-medium);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+            cursor: pointer;
+        }
+        .static-name-text:hover {
+            border-color: var(--senai-orange);
+            box-shadow: 0 0 0 3px rgba(255,102,0,0.2);
+        }
+        .edit-name-btn {
+            background: var(--senai-blue-light);
+            border: 1px solid var(--border-color-medium);
+            color: var(--senai-blue-dark);
+            border-radius: 50%;
+            min-width: 1.875rem; /* 30px */
+            height: 1.875rem; /* 30px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .edit-name-btn:hover {
+            background: var(--senai-blue-medium);
+            color: white;
+            transform: scale(1.05);
+        }
+        /* General input/textarea styles */
+        input, textarea {
+            border: 1px solid var(--border-color-medium);
+            border-radius: 10px;
+            padding: 0.5rem; /* 8px */
+            font-size: 0.85rem;
+            transition: 0.15s;
+            background: var(--background-container);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+            color: var(--text-color-dark);
+        }
+        input:focus, textarea:focus {
+            border-color: var(--senai-orange);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,102,0,0.2);
+        }
+        input[type=number] {
+            text-align: center;
+            -moz-appearance: textfield;
+            width: 70px; /* Fixed width for number inputs */
+        }
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .media-cell {
+            font-weight: 700;
+            background-color: var(--senai-blue-light) !important;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--senai-blue-dark);
+            border-radius: 0;
+            white-space: nowrap;
+        }
+        .obs-cell {
+            min-width: 180px; /* Minimum width for observation cell */
+        }
+        .obs-cell input {
+            background: var(--senai-orange-light); /* Light orange for observation */
+            width: 100%;
+        }
+        .acao-remover {
+            text-align: center;
+            width: 50px; /* Fixed width for action column */
+        }
+        .btn-remove {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            line-height: 1;
+            cursor: pointer;
+            color: #d00000; /* Red for remove action */
+            padding: 0 0.375rem; /* 0 6px */
+            border-radius: 30px;
+            transition: 0.1s;
+        }
+        .btn-remove:hover {
+            color: #ff0000;
+            background: #ffe3e3;
+            transform: scale(1.1);
+        }
+
+        /* DOCENTE INFO CARD */
+        .docente-info-card {
+            background: var(--background-card);
+            padding: 1.125rem 1rem; /* 18px 16px */
+            border-radius: 28px;
+            margin: 1.25rem 0 1.5625rem; /* 20px 0 25px */
+            border: 1px solid var(--border-color-light);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.625rem; /* 10px */
+            font-weight: 500;
+        }
+        .docente-info-card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--senai-blue-dark);
+            font-weight: 700;
+            margin-right: 0.3125rem; /* 5px */
+        }
+        .editable-text-display {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+            color: var(--text-color-dark);
+            background: var(--senai-blue-light);
+            padding: 0.5rem; /* 8px */
+            border-radius: 10px;
+            height: 2.375rem; /* 38px */
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color-medium);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+            cursor: pointer;
+            min-width: 9.375rem; /* 150px */
+        }
+        .editable-text-display:hover {
+            border-color: var(--senai-orange);
+            box-shadow: 0 0 0 3px rgba(255,102,0,0.2);
+        }
+        .editable-input {
+            flex-grow: 1;
+            background: var(--senai-blue-light);
+            font-weight: 500;
+            min-width: 9.375rem; /* 150px */
+        }
+        .edit-btn {
+            background: var(--senai-blue-light);
+            border: 1px solid var(--border-color-medium);
+            color: var(--senai-blue-dark);
+            border-radius: 50%;
+            min-width: 1.875rem; /* 30px */
+            height: 1.875rem; /* 30px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .edit-btn:hover {
+            background: var(--senai-blue-medium);
+            color: white;
+            transform: scale(1.05);
+        }
+        /* Header specific editable styles */
+        .editable-header-display {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 400;
+            color: var(--senai-blue-medium);
+            padding: 0.25rem 0.375rem; /* 4px 6px */
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+        }
+        .editable-header-display:hover {
+            border-color: var(--senai-blue-light);
+            box-shadow: 0 0 0 2px rgba(0,80,144,0.1);
+            background: var(--senai-blue-light);
+        }
+        .editable-header-input {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 400;
+            color: var(--senai-blue-medium);
+            padding: 0.25rem 0.375rem; /* 4px 6px */
+            border-radius: 6px;
+            background: var(--senai-blue-light);
+            min-width: 9.375rem; /* 150px */
+            flex-grow: 1;
+        }
+        .small-edit-btn {
+            width: 1.5rem; /* 24px */
+            height: 1.5rem; /* 24px */
+            font-size: 0.8rem;
+            background: var(--senai-blue-light);
+            border: 1px solid var(--border-color-medium);
+        }
+        .small-edit-btn:hover {
+            background: var(--senai-blue-medium);
+            color: white;
+        }
+        /* Specific style for the .desafio div to be editable */
+        .editable-desafio-display {
+            font-weight: 500;
+            color: var(--senai-blue-dark);
+            padding: 0.5rem 1rem; /* 8px 16px */
+            border-radius: 30px;
+            border-left: 5px solid var(--senai-orange);
+            background: var(--senai-blue-light);
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--gap-sm); /* 5px */
+            margin: 0.5rem 0 0.25rem; /* 8px 0 4px */
+        }
+        .editable-desafio-display:hover {
+            border-color: var(--senai-blue-dark);
+            box-shadow: 0 0 0 3px rgba(0,51,102,0.1);
+            background: #d8eef5; /* Slightly darker light blue */
+        }
+        .editable-desafio-input {
+            width: 100%;
+            font-weight: 500;
+            color: var(--senai-blue-dark);
+            padding: 0.5rem 1rem; /* 8px 16px */
+            border-radius: 30px;
+            border: 1px solid var(--border-color-medium);
+            background: var(--senai-blue-light);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+            border-left: 5px solid var(--senai-orange);
+            margin: 0.5rem 0 0.25rem; /* 8px 0 4px */
+        }
+        .desafio-edit-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-sm); /* 5px */
+            width: 100%;
+        }
+
+        /* TH Editable Styles */
+        .th-content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: var(--gap-sm); /* 5px */
+            flex-wrap: wrap;
+            min-height: 2.5rem; /* 40px */
+        }
+        .editable-th-display {
+            flex-grow: 1;
+            color: white;
+            font-weight: 600;
+            padding: 0.25rem 0.375rem; /* 4px 6px */
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            line-height: 1.2;
+            word-break: break-word;
+        }
+        .editable-th-display:hover {
+            border-color: var(--senai-orange); /* Orange hover border */
+            background: rgba(255,102,0,0.1); /* Transparent orange background */
+            box-shadow: 0 0 0 2px rgba(255,102,0,0.1);
+        }
+        .editable-th-input {
+            flex-grow: 1;
+            min-width: 5rem; /* 80px */
+            background: var(--senai-blue-light);
+            color: var(--senai-blue-dark);
+            padding: 0.25rem 0.375rem; /* 4px 6px */
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .th-edit-btn {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+            opacity: 0.8;
+        }
+        .th-edit-btn:hover {
+            background: rgba(255,102,0,0.3); /* Transparent orange hover */
+            opacity: 1;
+        }
+
+
+        /* rodapé com controles e observação docente */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.875rem; /* 14px */
+            margin: 1.5625rem 0 0.9375rem; /* 25px 0 15px */
+            align-items: center;
+        }
+        .btn {
+            background: var(--senai-blue-dark);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem; /* 12px 24px */
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: all 0.15s;
+            border: 1px solid var(--senai-blue-dark); /* Solid border for primary */
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem; /* 6px */
+        }
+        .btn-secondary {
+            background: var(--senai-orange); /* Orange for secondary action */
+            border-color: var(--senai-orange);
+        }
+        .btn-light {
+            background: var(--background-card);
+            color: var(--senai-blue-dark);
+            border: 1px solid var(--border-color-medium);
+            box-shadow: none;
+        }
+        .btn:hover {
+            background: var(--senai-blue-medium);
+            transform: translateY(-2px);
+            border-color: var(--senai-blue-medium);
+        }
+        .btn-secondary:hover {
+            background: #e65c00; /* Darker orange */
+            border-color: #e65c00;
+        }
+        .btn-light:hover {
+            background: var(--senai-blue-light);
+        }
+        .obs-docente {
+            background: var(--background-card);
+            border-radius: 24px;
+            padding: 1.125rem 1.375rem; /* 18px 22px */
+            margin-top: 1.25rem; /* 20px */
+            border: 1px dashed var(--senai-orange); /* Dashed orange border */
+        }
+        .obs-docente label {
+            font-weight: 700;
+            color: var(--senai-blue-dark);
+            display: block;
+            margin-bottom: 0.625rem; /* 10px */
+            font-size: 1.1rem;
+        }
+        .obs-docente textarea {
+            width: 100%;
+            min-height: 5rem; /* 80px */
+            border-radius: 18px;
+            padding: 0.875rem 1.125rem; /* 14px 18px */
+            background: var(--background-container);
+            border: 1px solid var(--border-color-medium);
+        }
+        .footer-note {
+            font-size: 0.8rem;
+            color: var(--text-color-medium);
+            text-align: right;
+            margin-top: 1rem; /* 16px */
+        }
+        .media-conceito {
+            display: inline-block;
+            background: var(--senai-blue-dark);
+            color: white;
+            padding: 0.125rem 0.625rem; /* 2px 10px */
+            border-radius: 30px;
+            font-size: 0.75rem;
+            margin-left: 0.3125rem; /* 5px */
+        }
+        .nota-max {
+            font-size: 0.7rem;
+            color: var(--text-color-medium);
+            display: block;
+            margin-top: 0.25rem; /* 4px */
+        }
+        /* Loading overlay for PDF generation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 51, 102, 0.9); /* Dark blue overlay */
+            display: flex;
+            flex-direction: column; /* Stack spinner and text */
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 1000;
+            text-align: center;
+            gap: 1rem;
+        }
+        .loading-overlay .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--senai-orange); /* Orange spinner */
+            border-radius: 50%;
+            width: 2.5rem; /* 40px */
+            height: 2.5rem; /* 40px */
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- MEDIA QUERIES --- */
+
+        /* Tablets e telas menores que 1200px */
+        @media (max-width: 1200px) {
+            #senaiHubBranding {
+                font-size: clamp(1.6rem, 4vw, 2.5rem);
+                margin-bottom: clamp(0.8rem, 1.5vw, 1.5rem);
+            }
+            .container {
+                padding: var(--main-padding-v) 1rem;
+            }
+            .toolbar {
+                gap: 0.625rem; /* 10px */
+            }
+            .btn {
+                padding: 0.625rem 1.25rem; /* 10px 20px */
+                font-size: 0.9rem;
+            }
+            table {
+                font-size: 0.8rem;
+            }
+            th, td {
+                padding: 0.4rem 0.3rem;
+            }
+            .aluno-nome {
+                min-width: 180px;
+            }
+            .obs-cell {
+                min-width: 150px;
+            }
+        }
+
+        /* Telas menores que 992px (Small tablets, landscape phones) */
+        @media (max-width: 992px) {
+            #senaiHubBranding {
+                font-size: clamp(1.4rem, 4.5vw, 2rem);
+                margin-bottom: clamp(0.7rem, 1.2vw, 1.2rem);
+            }
+            .header h1 {
+                font-size: clamp(1.4rem, 4.5vw, 1.7rem);
+            }
+            .header h2 {
+                font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            }
+            .legend-item {
+                flex: 1 1 180px; /* Allow more wrapping */
+                font-size: 0.9rem;
+            }
+            .item-desc strong {
+                font-size: 1.1rem;
+            }
+            .docente-info-card h3 {
+                font-size: 1rem;
+            }
+            .editable-text-display, .editable-input {
+                font-size: 0.9rem;
+            }
+            .toolbar span {
+                font-size: 0.85rem;
+            }
+            .obs-docente label {
+                font-size: 1rem;
+            }
+        }
+
+        /* Telas menores que 768px (Mobile landscape, large phones) */
+        @media (max-width: 768px) {
+            #senaiHubBranding {
+                font-size: clamp(1.2rem, 5vw, 1.8rem);
+                margin-bottom: clamp(0.5rem, 1vw, 1rem);
+            }
+            .container {
+                padding: 1rem 0.75rem;
+                border-radius: 15px;
+            }
+            .header {
+                margin-bottom: 1rem;
+            }
+            .header h1 {
+                font-size: clamp(1.2rem, 5vw, 1.5rem);
+                text-align: center;
+            }
+            .header h2 {
+                flex-direction: column; /* Stack h2 elements */
+                align-items: flex-start;
+                font-size: clamp(0.85rem, 4vw, 1rem);
+                gap: 0.3rem;
+            }
+            .header h2 span {
+                white-space: normal; /* Allow text to wrap */
+                text-overflow: clip;
+            }
+            .editable-header-display, .editable-header-input {
+                 width: 100%; /* Take full width */
+                 text-align: left;
+                 padding: 0.3rem 0.5rem;
+            }
+            .header h2 .small-edit-btn {
+                position: absolute; /* Position next to input */
+                right: 0.5rem;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .header h2 > span.editable-header-display, .header h2 > input.editable-header-input {
+                position: relative;
+                padding-right: 2.5rem; /* Make space for button */
+            }
+            .header h2 > span:not(.editable-header-display) { /* " · " separator */
+                display: none; /* Hide separators if stacked */
+            }
+
+            .desafio-edit-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .editable-desafio-display, .editable-desafio-input {
+                 width: 100%;
+                 text-align: left;
+            }
+
+            .legend-grid {
+                padding: 1rem;
+                border-radius: 20px;
+                margin: 1rem 0;
+            }
+            .legend-item {
+                flex: 1 1 100%; /* Stack items on small screens */
+                padding: 0.6rem 1rem;
+            }
+            .docente-info-card {
+                padding: 1rem;
+                border-radius: 20px;
+                margin: 1rem 0;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .docente-info-card h3 {
+                margin-right: 0;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+            .editable-text-display, .editable-input {
+                width: 100%;
+                min-width: unset;
+            }
+            .table-wrapper {
+                margin: 1rem 0;
+                border-radius: 15px;
+            }
+            table {
+                min-width: 800px; /* Maintain horizontal scroll for table content */
+                font-size: 0.75rem;
+            }
+            th, td {
+                padding: 0.3rem 0.2rem;
+            }
+            .aluno-nome {
+                min-width: 150px;
+            }
+            input[type=number] {
+                width: 55px; /* Smaller inputs for mobile */
+            }
+            .acao-remover {
+                width: 40px;
+            }
+            .btn-remove {
+                font-size: 1.4rem;
+            }
+            .toolbar {
+                flex-direction: column; /* Stack buttons */
+                align-items: stretch;
+                gap: 0.75rem;
+                margin: 1rem 0;
+            }
+            .toolbar .btn {
+                width: 100%;
+                padding: 0.75rem;
+                justify-content: center;
+            }
+            .toolbar span {
+                text-align: center !important;
+                font-size: 0.8rem;
+                width: 100%;
+            }
+            .obs-docente {
+                padding: 1rem;
+                border-radius: 15px;
+                margin-top: 1rem;
+            }
+            .obs-docente textarea {
+                min-height: 4rem;
+            }
+            .footer-note {
+                font-size: 0.7rem;
+            }
+            .loading-overlay {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+            .loading-overlay .spinner {
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+
+        /* Mobile phones (portrait) */
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px; /* Smaller base font size for very small screens */
+            }
+            .container {
+                padding: 0.75rem;
+            }
+            #senaiHubBranding {
+                font-size: clamp(1rem, 7vw, 1.5rem);
+                margin-bottom: clamp(0.3rem, 0.8vw, 0.8rem);
+            }
+            .header h1 {
+                font-size: clamp(1rem, 6vw, 1.2rem);
+            }
+            .header h2 {
+                font-size: clamp(0.75rem, 5vw, 0.85rem);
+            }
+            table {
+                min-width: 600px; /* Even smaller min-width for very small screens */
+            }
+            .aluno-nome {
+                min-width: 120px;
+            }
+            input[type=number] {
+                width: 45px;
+                padding: 0.3rem;
+            }
+            .media-cell {
+                font-size: 0.9rem;
+            }
+            .media-conceito {
+                font-size: 0.65rem;
+                padding: 0.1rem 0.4rem;
+            }
+            .obs-cell {
+                min-width: 100px;
+            }
+            .th-content-wrapper {
+                min-height: 2rem; /* Shorter header height */
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+<div id="senaiHubBranding">
+    <span class="senai-text">SENAI</span><span class="hub-text">HUB</span>
+</div>
+<div class="container" id="mainContainer">
+    <div class="header">
+        <h1>⚡ INSTRUMENTO PARA ACOMPANHAMENTO DE AVALIAÇÃO</h1>
+        <h2>
+            <span id="courseNameStatic" class="editable-header-display">TÉCNICO EM ELETROTÉCNICA</span>
+            <input type="text" id="courseNameInput" class="editable-header-input" style="display:none;" />
+            <button class="edit-btn small-edit-btn" aria-label="Editar nome do curso">✏️</button>
+            <span> · </span>
+            <span id="courseContextStatic" class="editable-header-display">ESCOLA INTEGRAL · 1º ANO · MATRIZ 1.640H · 2022-2024</span>
+            <input type="text" id="courseContextInput" class="editable-header-input" style="display:none;" />
+            <button class="edit-btn small-edit-btn" aria-label="Editar contexto do curso">✏️</button>
+            <span> · </span>
+            <span id="curricularUnitStatic" class="editable-header-display">DISCIPLINA DE ANÁLISE DE CIRCUITOS</span>
+            <input type="text" id="curricularUnitInput" class="editable-header-input" style="display:none;" />
+            <button class="edit-btn small-edit-btn" aria-label="Editar unidade curricular">✏️</button>
+        </h2>
+        <div class="desafio-edit-wrapper">
+            <span id="desafioStatic" class="editable-desafio-display">📋 DESAFIO: Portfólio – Etapa 2 (ESPECÍFICO I - ELETRICIDADE)</span>
+            <input type="text" id="desafioInput" class="editable-desafio-input" style="display:none;" />
+            <button class="edit-btn small-edit-btn" aria-label="Editar desafio">✏️</button>
+        </div>
+    </div>
+
+    <!-- Docente Info Card -->
+    <div class="docente-info-card">
+        <h3>DOCENTE:</h3>
+        <span id="docentNameStatic" class="editable-text-display">ESTER MAIA</span>
+        <input type="text" id="docentNameInput" class="editable-input" style="display:none;" />
+        <button class="edit-btn" aria-label="Editar nome do docente">✏️</button>
+    </div>
+
+    <!-- legenda conversão -->
+    <div class="legend-grid">
+        <div class="legend-item item-a"><span class="item-desc"><strong>A (9–10)</strong> Desenvolveu atendendo todos os critérios, resultado esperado.</span></div>
+        <div class="legend-item item-b"><span class="item-desc"><strong>B (7–8,9)</strong> Atendeu maior parte, sem comprometer resultado.</span></div>
+        <div class="legend-item item-c"><span class="item-desc"><strong>C (4–6,9)</strong> Atendeu poucos critérios, comprometeu resultado.</span></div>
+        <div class="legend-item item-d"><span class="item-desc"><strong>D (1–3,9)</strong> Não desenvolveu ou não atendeu critérios.</span></div>
+    </div>
+
+    <!-- tabela principal -->
+    <div class="table-wrapper">
+        <table id="avaliacaoTable">
+            <thead>
+                <tr>
+                    <th>👤 ALUNOS</th>
+                    <th>
+                        <div class="th-content-wrapper">
+                            <span id="criterion1Static" class="editable-th-display">1. CC· Tensões e correntes</span>
+                            <input type="text" id="criterion1Input" class="editable-th-input" style="display:none;" />
+                            <button class="edit-btn small-edit-btn th-edit-btn" aria-label="Editar critério 1">✏️</button>
+                        </div>
+                        <span class="nota-max">(0-10)</span>
+                    </th>
+                    <th>
+                        <div class="th-content-wrapper">
+                            <span id="criterion2Static" class="editable-th-display">1. CC· Resistência equiv.</span>
+                            <input type="text" id="criterion2Input" class="editable-th-input" style="display:none;" />
+                            <button class="edit-btn small-edit-btn th-edit-btn" aria-label="Editar critério 2">✏️</button>
+                        </div>
+                        <span class="nota-max">(0-10)</span>
+                    </th>
+                    <th>
+                        <div class="th-content-wrapper">
+                            <span id="criterion3Static" class="editable-th-display">1. CC· Potência total</span>
+                            <input type="text" id="criterion3Input" class="editable-th-input" style="display:none;" />
+                            <button class="edit-btn small-edit-btn th-edit-btn" aria-label="Editar critério 3">✏️</button>
+                        </div>
+                        <span class="nota-max">(0-10)</span>
+                    </th>
+                    <th>
+                        <div class="th-content-wrapper">
+                            <span id="criterion4Static" class="editable-th-display">2. CA· Tensões/correntes eficazes</span>
+                            <input type="text" id="criterion4Input" class="editable-th-input" style="display:none;" />
+                            <button class="edit-btn small-edit-btn th-edit-btn" aria-label="Editar critério 4">✏️</button>
+                        </div>
+                        <span class="nota-max">(0-10)</span>
+                    </th>
+                    <th>
+                        <div class="th-content-wrapper">
+                            <span id="criterion5Static" class="editable-th-display">2. CA· Impedância equiv.</span>
+                            <input type="text" id="criterion5Input" class="editable-th-input" style="display:none;" />
+                            <button class="edit-btn small-edit-btn th-edit-btn" aria-label="Editar critério 5">✏️</button>
+                        </div>
+                        <span class="nota-max">(0-10)</span>
+                    </th>
+                    <th>
+                        <div class="th-content-wrapper">
+                            <span id="criterion6Static" class="editable-th-display">2. CA· Pot. aparente/ativa/reativa</span>
+                            <input type="text" id="criterion6Input" class="editable-th-input" style="display:none;" />
+                            <button class="edit-btn small-edit-btn th-edit-btn" aria-label="Editar critério 6">✏️</button>
+                        </div>
+                        <span class="nota-max">(0-10)</span>
+                    </th>
+                    <th>
+                        <div class="th-content-wrapper">
+                            <span id="criterion7Static" class="editable-th-display">⚖️ Aval. equipe + crítica</span>
+                            <input type="text" id="criterion7Input" class="editable-th-input" style="display:none;" />
+                            <button class="edit-btn small-edit-btn th-edit-btn" aria-label="Editar critério 7">✏️</button>
+                        </div>
+                        <span class="nota-max">(0-10)</span>
+                    </th>
+                    <th>📊 Média Final (conceito)</th>
+                    <th>🗑️ Ações</th>
+                    <th>📝 Observação (individual)</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyAlunos">
+                <!-- linhas serão inseridas via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- barra de ferramentas -->
+    <div class="toolbar">
+        <button class="btn" id="addAlunoBtn">➕ Adicionar aluno</button>
+        <button class="btn btn-secondary" id="saveLocalBtn">💾 Salvar dados (navegador)</button>
+        <button class="btn btn-light" id="loadLocalBtn">📂 Carregar últimos salvos</button>
+        <button class="btn btn-secondary" id="downloadPdfBtn">📥 Baixar PDF</button> <!-- Novo botão de PDF -->
+        <span style="flex:1; text-align: right; color: var(--text-color-medium);">Média calculada automaticamente (soma/7)</span>
+    </div>
+
+    <!-- observações do docente (geral) -->
+    <div class="obs-docente">
+        <label>🗒️ OBSERVAÇÕES DO DOCENTE (geral / justificativas):</label>
+        <textarea id="docenteObservacoes" placeholder="Caso o docente sinta necessidade de descrever o porquê o aluno não desenvolveu os critérios, ou outras observações..."></textarea>
+    </div>
+    <div class="footer-note">
+        * Clique em "Salvar dados" para guardar no navegador. As médias são recalculadas a cada alteração.
+    </div>
+</div>
+
+<div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="spinner"></div>
+    Gerando PDF... Por favor, aguarde.
+</div>
+
+<script>
+    (function() {
+        // Referências
+        const tbody = document.getElementById('tbodyAlunos');
+        const addBtn = document.getElementById('addAlunoBtn');
+        const saveBtn = document.getElementById('saveLocalBtn');
+        const loadBtn = document.getElementById('loadLocalBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn'); // Novo
+        const mainContainer = document.getElementById('mainContainer'); // Novo
+        const loadingOverlay = document.getElementById('loadingOverlay'); // Novo
+        const docenteTextarea = document.getElementById('docenteObservacoes');
+        const LOCAL_STORAGE_KEY = 'fichaEletrica';
+
+        // Docente Name References
+        const docentNameStatic = document.getElementById('docentNameStatic');
+        const docentNameInput = document.getElementById('docentNameInput');
+        const docentNameEditBtn = docentNameInput.nextElementSibling;
+
+        // Course Name References
+        const courseNameStatic = document.getElementById('courseNameStatic');
+        const courseNameInput = document.getElementById('courseNameInput');
+        const courseNameEditBtn = courseNameInput.nextElementSibling;
+
+        // Course Context References
+        const courseContextStatic = document.getElementById('courseContextStatic');
+        const courseContextInput = document.getElementById('courseContextInput');
+        const courseContextEditBtn = courseContextInput.nextElementSibling;
+
+        // Curricular Unit References
+        const curricularUnitStatic = document.getElementById('curricularUnitStatic');
+        const curricularUnitInput = document.getElementById('curricularUnitInput');
+        const curricularUnitEditBtn = curricularUnitInput.nextElementSibling;
+
+        // Desafio References
+        const desafioStatic = document.getElementById('desafioStatic');
+        const desafioInput = document.getElementById('desafioInput');
+        const desafioEditBtn = desafioInput.nextElementSibling;
+
+        // Criterion Headers References
+        const criterionStatics = [];
+        const criterionInputs = [];
+        const criterionEditBtns = [];
+        for (let i = 1; i <= 7; i++) {
+            criterionStatics.push(document.getElementById(`criterion${i}Static`));
+            criterionInputs.push(document.getElementById(`criterion${i}Input`));
+            criterionEditBtns.push(document.getElementById(`criterion${i}Input`).nextElementSibling);
+        }
+
+        // ---------- funções de conceito ----------
+        function obterConceito(media) {
+            if (media >= 9) return 'A';
+            if (media >= 7) return 'B';
+            if (media >= 4) return 'C';
+            if (media >= 1) return 'D';
+            return '—';  // zero ou inválido
+        }
+
+        // ---------- calcular média de uma linha (índice da linha no tbody) ----------
+        function calcularMediaLinha(row) {
+            const inputsNota = row.querySelectorAll('.nota-criterio');
+            let soma = 0;
+            let count = 0;
+            inputsNota.forEach(inp => {
+                let val = parseFloat(inp.value);
+                if (isNaN(val)) val = 0;
+                // garante entre 0 e 10
+                val = Math.min(10, Math.max(0, val));
+                inp.value = val; // normaliza
+                soma += val;
+                count++;
+            });
+            // sempre 7 critérios, mas segurança
+            if (count === 0) return 0;
+            const media = soma / count;  // count = 7 fixo
+            return media;
+        }
+
+        // atualiza célula de média e conceito de uma linha específica
+        function atualizarExibicaoMedia(row) {
+            const media = calcularMediaLinha(row);
+            const mediaCell = row.querySelector('.media-valor');
+            if (mediaCell) {
+                const conceito = obterConceito(media);
+                mediaCell.innerHTML = `${media.toFixed(2)} <span class="media-conceito">${conceito}</span>`;
+            }
+        }
+
+        // recalcular todas as linhas (útil após carregar)
+        function atualizarTodasMedias() {
+            const linhas = tbody.querySelectorAll('tr');
+            linhas.forEach(row => atualizarExibicaoMedia(row));
+        }
+
+        // ---------- Generic Toggle Edit Mode function ----------
+        function setupEditableField(staticElem, inputElem, editBtn, defaultValue = '') {
+            const toggleMode = (isEditing) => {
+                if (isEditing) {
+                    inputElem.style.display = 'inline-block';
+                    staticElem.style.display = 'none';
+                    if (editBtn) editBtn.style.display = 'none'; // Check if editBtn exists
+                    inputElem.focus();
+                    inputElem.select();
+                } else {
+                    let currentValue = inputElem.value.trim();
+                    if (currentValue === '') {
+                        currentValue = defaultValue;
+                    }
+                    inputElem.value = currentValue;
+                    staticElem.textContent = currentValue;
+                    
+                    inputElem.style.display = 'none';
+                    staticElem.style.display = 'inline-block';
+                    if (editBtn) editBtn.style.display = 'inline-block'; // Check if editBtn exists
+                    salvarNoLocalStorage(); // Auto-save on blur
+                }
+            };
+
+            staticElem.addEventListener('click', () => toggleMode(true));
+            if (editBtn) editBtn.addEventListener('click', () => toggleMode(true)); // Check if editBtn exists
+            inputElem.addEventListener('blur', () => toggleMode(false));
+            inputElem.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    inputElem.blur(); // Trigger blur to save and exit edit mode
+                }
+            });
+
+            // Set initial state
+            inputElem.value = staticElem.textContent.trim() || defaultValue;
+            toggleMode(inputElem.value.trim() === '');
+        }
+
+        // ---------- criar uma nova linha (vazia ou com dados iniciais) ----------
+        function criarLinha(dados = null) {
+            const tr = document.createElement('tr');
+
+            // Nome do aluno (refactored)
+            const tdNome = document.createElement('td');
+            tdNome.className = 'aluno-nome';
+
+            const nameWrapper = document.createElement('div');
+            nameWrapper.className = 'name-display-wrapper';
+
+            const inpNome = document.createElement('input');
+            inpNome.type = 'text';
+            inpNome.placeholder = 'Nome do aluno';
+            inpNome.value = dados?.nome || '';
+            inpNome.classList.add('edit-name-input');
+
+            const spanName = document.createElement('span');
+            spanName.className = 'static-name-text';
+            spanName.textContent = inpNome.value.trim() || 'Nome do aluno';
+
+            const btnEdit = document.createElement('button');
+            btnEdit.className = 'edit-name-btn';
+            btnEdit.innerHTML = '✏️';
+            btnEdit.setAttribute('aria-label', 'Editar nome do aluno');
+
+            nameWrapper.appendChild(inpNome);
+            nameWrapper.appendChild(spanName);
+            nameWrapper.appendChild(btnEdit);
+            tdNome.appendChild(nameWrapper);
+            tr.appendChild(tdNome);
+
+            // Use the generic setup for student name
+            setupEditableField(spanName, inpNome, btnEdit, 'Nome do aluno');
+
+            // 7 notas (critérios) com class .nota-criterio
+            const notasIniciais = dados?.notas || [0,0,0,0,0,0,0];
+            for (let i = 0; i < 7; i++) {
+                const td = document.createElement('td');
+                const inp = document.createElement('input');
+                inp.type = 'number';
+                inp.step = '0.1';
+                inp.min = '0';
+                inp.max = '10';
+                inp.value = notasIniciais[i] !== undefined ? notasIniciais[i] : 0;
+                inp.classList.add('nota-criterio');
+                // evento para atualizar média ao digitar
+                inp.addEventListener('input', function(e) {
+                    let val = parseFloat(e.target.value);
+                    if (isNaN(val)) val = 0;
+                    val = Math.min(10, Math.max(0, val));
+                    e.target.value = val;
+                    atualizarExibicaoMedia(tr);
+                });
+                td.appendChild(inp);
+                tr.appendChild(td);
+            }
+
+            // célula de média (exibição)
+            const tdMedia = document.createElement('td');
+            tdMedia.className = 'media-cell';
+            const spanMedia = document.createElement('span');
+            spanMedia.className = 'media-valor';
+            tdMedia.appendChild(spanMedia);
+            tr.appendChild(tdMedia);
+
+            // célula de ação (remover)
+            const tdAcao = document.createElement('td');
+            tdAcao.className = 'acao-remover';
+            const btnRemove = document.createElement('button');
+            btnRemove.className = 'btn-remove';
+            btnRemove.innerHTML = '✕';
+            btnRemove.setAttribute('aria-label', 'remover aluno');
+            btnRemove.addEventListener('click', function() {
+                if (tbody.children.length > 1) {
+                    tr.remove();
+                    salvarNoLocalStorage(); // Save changes after removing a student
+                } else {
+                    alert('A ficha precisa de pelo menos um aluno. Adicione outro se quiser remover este.');
+                }
+            });
+            tdAcao.appendChild(btnRemove);
+            tr.appendChild(tdAcao);
+
+            // célula de observação individual
+            const tdObs = document.createElement('td');
+            tdObs.className = 'obs-cell';
+            const inpObs = document.createElement('input');
+            inpObs.type = 'text';
+            inpObs.placeholder = 'Obs. individual...';
+            inpObs.value = dados?.obs || '';
+            tdObs.appendChild(inpObs);
+            tr.appendChild(tdObs);
+
+            // calcular média inicial (se dados fornecidos, já considera)
+            atualizarExibicaoMedia(tr);
+
+            return tr;
+        }
+
+        // ---------- inicializar com alguns alunos de exemplo (fiel ao espírito) ----------
+        function inicializarExemplos() {
+            const exemplo1 = {
+                nome: 'João Pedro',
+                notas: [8.5, 9.0, 7.5, 8.0, 7.0, 8.5, 9.5],
+                obs: 'Bom domínio de corrente alternada'
+            };
+            const exemplo2 = {
+                nome: 'Maria Fernanda',
+                notas: [6.0, 5.5, 6.5, 7.0, 6.0, 5.0, 8.0],
+                obs: 'Dificuldade em potência reativa'
+            };
+            const exemplo3 = {
+                nome: 'Lucas Oliveira',
+                notas: [9.5, 9.0, 9.5, 8.5, 9.0, 8.5, 9.0],
+                obs: 'ótimo desempenho geral'
+            };
+            tbody.appendChild(criarLinha(exemplo1));
+            tbody.appendChild(criarLinha(exemplo2));
+            tbody.appendChild(criarLinha(exemplo3));
+        }
+
+        // ---------- coletar dados de todas as linhas + observação docente + info do cabeçalho ----------
+        function coletarDadosCompletos() {
+            const linhas = Array.from(tbody.querySelectorAll('tr'));
+            const alunos = linhas.map(tr => {
+                const nameInput = tr.querySelector('.aluno-nome .edit-name-input');
+                const nome = nameInput ? nameInput.value.trim() : 'Nome do aluno';
+
+                const inputs = tr.querySelectorAll('input.nota-criterio');
+                const notas = [];
+                inputs.forEach(inp => {
+                    let val = parseFloat(inp.value);
+                    if (isNaN(val)) val = 0;
+                    notas.push(val);
+                });
+                const obsInput = tr.querySelector('.obs-cell input[type="text"]');
+                const obs = obsInput ? obsInput.value : '';
+
+                return { nome, notas, obs };
+            });
+
+            // Collect criterion header texts
+            const criterionHeaders = criterionInputs.map(input => input.value.trim());
+
+            return {
+                alunos: alunos,
+                docenteObs: docenteTextarea.value,
+                docentName: docentNameInput.value.trim(),
+                courseName: courseNameInput.value.trim(),
+                courseContext: courseContextInput.value.trim(),
+                curricularUnit: curricularUnitInput.value.trim(),
+                desafio: desafioInput.value.trim(),
+                criterionHeaders: criterionHeaders, // Added to saved data
+            };
+        }
+
+        // ---------- carregar dados para a tabela ----------
+        function carregarDados(dados) {
+            tbody.innerHTML = '';
+            if (dados.alunos && Array.isArray(dados.alunos) && dados.alunos.length > 0) {
+                dados.alunos.forEach(al => {
+                    tbody.appendChild(criarLinha(al));
+                });
+            } else {
+                inicializarExemplos();
+            }
+            docenteTextarea.value = dados.docenteObs || '';
+
+            // Load Docent Name
+            docentNameInput.value = dados.docentName || 'ESTER MAIA';
+            docentNameStatic.textContent = docentNameInput.value;
+            // Load Course Name
+            courseNameInput.value = dados.courseName || 'TÉCNICO EM ELETROTÉCNICA';
+            courseNameStatic.textContent = courseNameInput.value;
+            // Load Course Context
+            courseContextInput.value = dados.courseContext || 'ESCOLA INTEGRAL · 1º ANO · MATRIZ 1.640H · 2022-2024';
+            courseContextStatic.textContent = courseContextInput.value;
+            // Load Curricular Unit
+            curricularUnitInput.value = dados.curricularUnit || 'DISCIPLINA DE ANÁLISE DE CIRCUITOS';
+            curricularUnitStatic.textContent = curricularUnitInput.value;
+            // Load Desafio
+            desafioInput.value = dados.desafio || '📋 DESAFIO: Portfólio – Etapa 2 (ESPECÍFICO I - ELETRICIDADE)';
+            desafioStatic.textContent = desafioInput.value;
+
+            // Load Criterion Headers
+            const defaultCriterionHeaders = [
+                '1. CC· Tensões e correntes',
+                '1. CC· Resistência equiv.',
+                '1. CC· Potência total',
+                '2. CA· Tensões/correntes eficazes',
+                '2. CA· Impedância equiv.',
+                '2. CA· Pot. aparente/ativa/reativa',
+                '⚖️ Aval. equipe + crítica'
+            ];
+            for (let i = 0; i < 7; i++) {
+                criterionInputs[i].value = (dados.criterionHeaders && dados.criterionHeaders[i]) || defaultCriterionHeaders[i];
+                criterionStatics[i].textContent = criterionInputs[i].value;
+            }
+
+
+            // Re-toggle edit modes to ensure correct display based on loaded data (especially for empty fields)
+            setupEditableField(docentNameStatic, docentNameInput, docentNameEditBtn, 'ESTER MAIA');
+            setupEditableField(courseNameStatic, courseNameInput, courseNameEditBtn, 'TÉCNICO EM ELETROTÉCNICA');
+            setupEditableField(courseContextStatic, courseContextInput, courseContextEditBtn, 'ESCOLA INTEGRAL · 1º ANO · MATRIZ 1.640H · 2022-2024');
+            setupEditableField(curricularUnitStatic, curricularUnitInput, curricularUnitEditBtn, 'DISCIPLINA DE ANÁLISE DE CIRCUITOS');
+            setupEditableField(desafioStatic, desafioInput, desafioEditBtn, '📋 DESAFIO: Portfólio – Etapa 2 (ESPECÍFICO I - ELETRICIDADE)');
+            // Setup criterion header fields
+            for (let i = 0; i < 7; i++) {
+                setupEditableField(criterionStatics[i], criterionInputs[i], criterionEditBtns[i], defaultCriterionHeaders[i]);
+            }
+
+            atualizarTodasMedias();
+        }
+
+        // ---------- localStorage: salvar ----------
+        function salvarNoLocalStorage() {
+            const dados = coletarDadosCompletos();
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dados));
+            // alert('Dados salvos com sucesso no navegador!'); // Removed for auto-save, optional for manual save button
+        }
+
+        function carregarDoLocalStorage() {
+            const salvo = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (salvo) {
+                try {
+                    const dados = JSON.parse(salvo);
+                    carregarDados(dados);
+                    alert('Dados carregados do navegador.');
+                } catch (e) {
+                    console.error('Erro ao parsear dados do localStorage:', e);
+                    alert('Erro ao carregar dados. Iniciando exemplo.');
+                    tbody.innerHTML = '';
+                    inicializarExemplos();
+                    docenteTextarea.value = '';
+                }
+            } else {
+                alert('Nenhum dado salvo encontrado. Começando com exemplo.');
+                tbody.innerHTML = '';
+                inicializarExemplos();
+                docenteTextarea.value = '';
+            }
+        }
+
+        // ---------- Função para baixar PDF ----------
+        async function downloadPdf() {
+            loadingOverlay.style.display = 'flex'; // Mostrar overlay de carregamento
+            downloadPdfBtn.disabled = true; // Desabilitar botão
+
+            try {
+                // Forçar todos os inputs editáveis a sair do modo de edição
+                document.querySelectorAll('.edit-name-input, .editable-input, .editable-header-input, .editable-desafio-input, .editable-th-input').forEach(input => {
+                    if (input.style.display === 'inline-block') {
+                        input.blur(); // Simula o blur para salvar e esconder o input
+                    }
+                });
+                
+                // Pequeno delay para garantir que os blurs sejam processados e o DOM atualizado
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                const canvas = await html2canvas(mainContainer, { 
+                    scale: 2, // Aumenta a resolução para o PDF
+                    useCORS: true, // Necessário se houver imagens de outras origens
+                    windowWidth: mainContainer.scrollWidth, // Captura a largura total do conteúdo
+                    windowHeight: mainContainer.scrollHeight, // Captura a altura total do conteúdo
+                    scrollX: 0,
+                    scrollY: -window.scrollY // Ajusta a rolagem para capturar do topo
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4'); // 'p' = portrait, 'mm' = units, 'a4' = page size
+                
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save('ficha-avaliacao.pdf');
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                alert('Ocorreu um erro ao gerar o PDF. Por favor, tente novamente.');
+            } finally {
+                loadingOverlay.style.display = 'none'; // Esconder overlay
+                downloadPdfBtn.disabled = false; // Reabilitar botão
+            }
+        }
+
+        // ---------- evento de adicionar linha (vazia) ----------
+        addBtn.addEventListener('click', function() {
+            const novaLinha = criarLinha({ nome: '', notas: [0,0,0,0,0,0,0], obs: '' });
+            tbody.appendChild(novaLinha);
+            salvarNoLocalStorage(); // Save changes after adding a student
+        });
+
+        saveBtn.addEventListener('click', salvarNoLocalStorage);
+        loadBtn.addEventListener('click', carregarDoLocalStorage);
+        downloadPdfBtn.addEventListener('click', downloadPdf); // Evento para o novo botão de PDF
+
+
+        // ---------- inicialização ----------
+        (function iniciar() {
+            const salvo = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (salvo) {
+                try {
+                    const dados = JSON.parse(salvo);
+                    carregarDados(dados);
+                } catch (e) {
+                    console.error('Erro ao parsear dados do localStorage na inicialização:', e);
+                    tbody.innerHTML = '';
+                    inicializarExemplos();
+                    docenteTextarea.value = '';
+                    // Reset defaults for header/docent/course context/desafio if error
+                    docentNameInput.value = 'ESTER MAIA';
+                    courseNameInput.value = 'TÉCNICO EM ELETROTÉCNICA';
+                    courseContextInput.value = 'ESCOLA INTEGRAL · 1º ANO · MATRIZ 1.640H · 2022-2024';
+                    curricularUnitInput.value = 'DISCIPLINA DE ANÁLISE DE CIRCUITOS';
+                    desafioInput.value = '📋 DESAFIO: Portfólio – Etapa 2 (ESPECÍFICO I - ELETRICIDADE)';
+                    // Default criterion headers if error
+                    const defaultCriterionHeaders = [
+                        '1. CC· Tensões e correntes',
+                        '1. CC· Resistência equiv.',
+                        '1. CC· Potência total',
+                        '2. CA· Tensões/correntes eficazes',
+                        '2. CA· Impedância equiv.',
+                        '2. CA· Pot. aparente/ativa/reativa',
+                        '⚖️ Aval. equipe + crítica'
+                    ];
+                    for (let i = 0; i < 7; i++) {
+                        criterionInputs[i].value = defaultCriterionHeaders[i];
+                        criterionStatics[i].textContent = defaultCriterionHeaders[i];
+                    }
+                }
+            } else {
+                tbody.innerHTML = '';
+                inicializarExemplos();
+                docenteTextarea.value = '';
+                // Set defaults for header/docent/course context/desafio if no data
+                docentNameInput.value = 'ESTER MAIA';
+                courseNameInput.value = 'TÉCNICO EM ELETROTÉCNICA';
+                courseContextInput.value = 'ESCOLA INTEGRAL · 1º ANO · MATRIZ 1.640H · 2022-2024';
+                curricularUnitInput.value = 'DISCIPLINA DE ANÁLISE DE CIRCUITOS';
+                desafioInput.value = '📋 DESAFIO: Portfólio – Etapa 2 (ESPECÍFICO I - ELETRICIDADE)';
+                // Default criterion headers if no data
+                const defaultCriterionHeaders = [
+                    '1. CC· Tensões e correntes',
+                    '1. CC· Resistência equiv.',
+                    '1. CC· Potência total',
+                    '2. CA· Tensões/correntes eficazes',
+                    '2. CA· Impedância equiv.',
+                    '2. CA· Pot. aparente/ativa/reativa',
+                    '⚖️ Aval. equipe + crítica'
+                ];
+                for (let i = 0; i < 7; i++) {
+                    criterionInputs[i].value = defaultCriterionHeaders[i];
+                    criterionStatics[i].textContent = defaultCriterionHeaders[i];
+                }
+            }
+
+            // Setup editable fields for docent name, course name, curricular unit, course context and desafio
+            setupEditableField(docentNameStatic, docentNameInput, docentNameEditBtn, 'ESTER MAIA');
+            setupEditableField(courseNameStatic, courseNameInput, courseNameEditBtn, 'TÉCNICO EM ELETROTÉCNICA');
+            setupEditableField(courseContextStatic, courseContextInput, courseContextEditBtn, 'ESCOLA INTEGRAL · 1º ANO · MATRIZ 1.640H · 2022-2024');
+            setupEditableField(curricularUnitStatic, curricularUnitInput, curricularUnitEditBtn, 'DISCIPLINA DE ANÁLISE DE CIRCUITOS');
+            setupEditableField(desafioStatic, desafioInput, desafioEditBtn, '📋 DESAFIO: Portfólio – Etapa 2 (ESPECÍFICO I - ELETRICIDADE)');
+            // Setup criterion header fields
+            const defaultCriterionHeaders = [ // Re-define defaults here for initial setup
+                '1. CC· Tensões e correntes',
+                '1. CC· Resistência equiv.',
+                '1. CC· Potência total',
+                '2. CA· Tensões/correntes eficazes',
+                '2. CA· Impedância equiv.',
+                '2. CA· Pot. aparente/ativa/reativa',
+                '⚖️ Aval. equipe + crítica'
+            ];
+            for (let i = 0; i < 7; i++) {
+                setupEditableField(criterionStatics[i], criterionInputs[i], criterionEditBtns[i], defaultCriterionHeaders[i]);
+            }
+
+            // Add a debounce for auto-saving on any input change in the table or textarea
+            let debounceTimer;
+            document.addEventListener('input', function(event) {
+                // Only trigger save if the input is within the table body, docent textarea, or editable header/docent fields
+                const isCriterionInput = criterionInputs.includes(event.target);
+                if (event.target.closest('#tbodyAlunos') || event.target === docenteTextarea || 
+                    event.target === docentNameInput || event.target === courseNameInput || 
+                    event.target === courseContextInput || event.target === curricularUnitInput ||
+                    event.target === desafioInput || isCriterionInput) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        salvarNoLocalStorage();
+                    }, 1000); // Save after 1 second of inactivity
+                }
+            });
+        })();
+    })();
+</script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

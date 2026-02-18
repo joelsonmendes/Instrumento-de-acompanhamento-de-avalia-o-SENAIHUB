@@ -1,0 +1,6 @@
+
+{
+  "name": "Planilha de Avaliação",
+  "description": "Uma ferramenta interativa para acompanhar avaliações de cursos técnicos, permitindo a entrada de notas, cálculo automático de média e conceito, gerenciamento de alunos e download em PDF.",
+  "requestFramePermissions": []
+}
